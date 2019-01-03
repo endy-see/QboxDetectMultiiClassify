@@ -262,7 +262,7 @@ class SolverWrapper(object):
                 print('iter: %d / %d, total loss: %.6f\n >>> rpn_loss_cls: %.6f\n '
                       '>>> rpn_loss_box: %.6f\n >>> loss_cls: %.6f\n >>> loss_box: %.6f\n >>> loss_rbox: %.6f\n >>> loss_quadbox: %.6f\n >>> loss_confidence: %.6f\n >>> lr: %f' % \
                       (iter, max_iters, total_loss, rpn_loss_cls, rpn_loss_box, loss_cls, loss_box, loss_rbox,
-                       loss_quadbox, lr.eval()))
+                       loss_quadbox, loss_confidence, lr.eval()))
                 print('speed: {:.3f}s / iter'.format(timer.average_time))
 
             if iter % cfg.TRAIN.SNAPSHOT_ITERS == 0:

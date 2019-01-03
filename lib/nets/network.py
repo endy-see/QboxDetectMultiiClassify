@@ -187,7 +187,6 @@ class Network(object):
             rbox_outside_weights.set_shape([cfg.TRAIN.BATCH_SIZE, self._num_classes * 5])
             quadbox_inside_weights.set_shape([cfg.TRAIN.BATCH_SIZE, self._num_classes * 8])
             quadbox_outside_weights.set_shape([cfg.TRAIN.BATCH_SIZE, self._num_classes * 8])
-            recogn_labels.set_shape([cfg.TRAIN.BATCH_SIZE, 1])
 
             self._proposal_targets['rois'] = rois
             self._proposal_targets['labels'] = tf.to_int32(labels, name="to_int32")
@@ -296,10 +295,10 @@ class Network(object):
 
             if cfg.TRAIN.USE_RECOG:
                 # RCNN, recognize loss
-                recogn_score = tf.reshape(self._predictions['recogn_score'], [-1, 2])
+                recogn_score = tf.reshape(self._predictions['recogn_score'], [-1, 3])
                 recogn_label = tf.reshape(self._proposal_targets["recogn_labels"], [-1])
                 recogn_select = tf.where(tf.not_equal(recogn_label, -1))
-                recogn_score = tf.reshape(tf.gather(recogn_score, recogn_select), [-1, 2])
+                recogn_score = tf.reshape(tf.gather(recogn_score, recogn_select), [-1, 3])
                 recogn_label = tf.reshape(tf.gather(recogn_label, recogn_select), [-1])
                 recogn_cross_entropy = tf.reduce_mean(
                     tf.nn.sparse_softmax_cross_entropy_with_logits(
@@ -381,7 +380,7 @@ class Network(object):
                                             weights_initializer=initializer_bbox,
                                             trainable=is_training,
                                             activation_fn=None, scope='quadbox_pred')
-        recogn_score = slim.fully_connected(fc7, 2,
+        recogn_score = slim.fully_connected(fc7, 3,
                                             weights_initializer=initializer_bbox,
                                             trainable=is_training,
                                             activation_fn=None, scope='recogn_score')
